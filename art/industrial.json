@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "direction": "工业产品展示：保留真实结构与功能色，边缘高光克制，材质可辨，先审阅原模型再按部件补充材质规则。",
+  "geometry": {
+    "bevelRatio": 0.002,
+    "segments": 3,
+    "angle": 40,
+    "weightedNormals": true,
+    "excludeNodes": []
+  },
+  "materials": [],
+  "render": {
+    "resolution": 768,
+    "samples": 32,
+    "exposure": 0,
+    "views": [
+      "front",
+      "back",
+      "left",
+      "right",
+      "top",
+      "bottom",
+      "hero"
+    ]
+  }
+}

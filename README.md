@@ -1,8 +1,61 @@
 # Model Optimization Studio
 
-面向 Three.js 编辑器、数字孪生设备模型的本地 glTF/GLB 优化项目。借鉴 Claude-Code-Game-Studios 的角色分工和验收流程，配套实际可运行的 Node.js 优化工具。无需 AI API Key；可独立命令行运行，也可交给 Claude Code / Codex 操作。
+面向 Three.js / 数字孪生资产的 **Blender 美化工作室**。v0.2 将美术质量放在首位：参考 Claude-Code-Game-Studios 的美术指导、技术美术与证据验收方法，由 Claude Code / Codex 制定逐模型方案，真实调用 Blender 执行，再看图迭代。保留原来的 Node.js 轻量化工具。
 
-## 快速开始
+## 美化模型（主流程）
+
+需要 Node.js 22+ 与 **Blender 4.5 LTS**，无需安装 Blender 插件或开通额外模型 API。CLI 本身不调用 AI：美术决策、图片审阅与迭代由运行它的 Claude Code / Codex 完成。
+
+```bash
+npm ci
+# 读取节点和材质，供 AI 制定逐部件方案
+npm run inspect -- input/model.glb
+# Blender 已在 PATH 时
+npm run beautify -- input/model.glb --plan art/industrial.json
+
+# macOS 示例（Windows 可用 --blender "C:\Program Files\Blender Foundation\Blender 4.5\blender.exe"）
+npm run beautify -- input/model.glb --blender /Applications/Blender.app/Contents/MacOS/Blender --plan art/industrial.json
+
+# 可重现的材质美化示例
+npm run beauty:demo
+npm run beautify -- input/beauty-demo.glb --plan art/demo.json
+```
+
+在 Claude Code 中输入 `/beautify input/model.glb`，或给 Claude Code / Codex：
+
+> 按 AGENTS.md 和 art/ART_BIBLE.md，使用 Blender 美化 input/model.glb。重点提升材质、边缘高光、表面质感与色彩层级，保持设备名称、层级、变换和 extras。先渲染原模型、制定逐部件方案，再执行并实际查看六向前后对比；最多迭代三轮，交付最佳 GLB、blend 和审阅记录。暂不减面。
+
+默认工业风格只是起点，**没有替所有模型预先决定配色或物理材质**。宿主 AI 应根据输入与参考填写 `art/<asset>-v1.json` 和对应的说明，再运行；没有素材参考时记录假设并推进。可用的参数格式见 `art/demo.json`，美术标准和评分方式见 [ART_BIBLE](art/ART_BIBLE.md)。
+
+### 实际执行内容
+
+- 逐材质、可逐节点设置 PBR 颜色、粗糙度、金属度；颜色值为 sRGB 0–1，写入 Blender 时转线性。贴图输入默认保留；只有该规则显式写 `replaceTextures: true` 才解除相应输入连接。原 UV 与法线贴图不主动重做。
+- 静态封闭流形网格的小倒角、角度锐边、加权法线，改善真实几何的边缘高光；不做减面。开放网格、非均匀/负缩放、超过 20 万面的对象跳过自动倒角并记录原因，不为了倒角改变设备变换。
+- 固定 Cycles CPU 三点棚灯、地面、AgX、曝光与相机；六个正交方向加 hero 成对渲染（底视图隐藏展示地面）。after 图来自导出 GLB 的重新导入，避免仅 Blender 内看起来正确。
+- 导出后检查 glTF 有效性及节点名称、父子关系、局部矩阵（浮点容差）、extras 与网格绑定存在性；不要求 Blender 保留节点数组顺序、材质名称/身份或原始字节。
+
+输入当前限定为单场景、节点名非空且唯一的静态三角形 glTF/GLB；拒绝动画、skin、morph、源摄像机、场景外节点。扩展往返尚未全面验收，当前美化只接受 Meshopt/Draco 压缩与 mesh quantization，先解码后交给 Blender；其他扩展明确报错，避免静默丢失。原 `optimize` 对动画等输入的支持不变。
+
+### 每轮交付
+
+输出到全新 `output/beauty-XXXXXX/`：
+
+| 文件 | 内容 |
+|---|---|
+| `beautified.glb` | 格式与节点契约通过后的美化候选，供 Three.js 使用 |
+| `beautified.blend` | 美化模型与展示棚灯、地面、相机，贴图打包 |
+| `before-*.png` / `after-*.png` | 相同条件的前后对比 |
+| `comparison.html` | 可在本地浏览器打开的并排图册 |
+| `art-plan.json` | 本轮实际执行参数 |
+| `report.json` / `blender-report.json` / `blender.log` | 验证、操作/跳过清单与运行日志 |
+| `review.json` | 初始 pending，由实际看图的宿主 AI/人补充意见、证据与下一轮修改 |
+| `source.glb` / `candidate.glb` | 解码原输入与原始导出，保留排查证据 |
+
+每一轮必须回到原始输入，用新版方案重跑，避免倒角反复叠加。CLI 成功状态为 `needs-visual-review`，**不会自动宣称审美通过**。`.blend` 的棚灯、地面和 AgX 不导出到 GLB；Three.js 仍需自行设置环境光照、阴影与 tone mapping。模型的几何和材质改动才会带入 GLB，美化可能增加体积和面数。
+
+自动重拓扑、UV 重展/烘焙、缺失部件重建、磨损纹理目前没有现成执行器；技术美术可针对具体模型扩展 Blender Python 并验证，不能靠提示词保证任意资产“彻底变好看”。纯静态网站不能直接运行本地 Blender：网页版需连接本机任务服务或运行 Blender 的后端，此仓库暂未提供该服务。
+
+## 轻量化（保留的辅助流程）
 
 安装 Node.js 22 或更新版本，然后：
 
@@ -69,8 +122,8 @@ scene.add(gltf.scene);
 
 report.json 包含前后节点、网格、资源三角形/顶点、primitive、材质、贴图、动画、蒙皮统计，以及候选参数、Validator 结果、失败原因和结构比较。三角形为网格资源统计，不重复计算实例；primitive 不能当作运行时 draw calls，未测量 FPS/显存/加载耗时。Validator 的不支持扩展提示仍需结合实际加载器判断。
 
-视觉验收必须在相同视角、环境、曝光、tone mapping 和分辨率下检查，尤其关注六面轮廓、细管线、法线贴图、透明材质、动画与设备点击绑定。当前不包含可视化比较器和截图自动评分，所有报告默认 `visualReview: pending`。
+视觉验收必须在相同视角、环境、曝光、tone mapping 和分辨率下检查，尤其关注六面轮廓、细管线、法线贴图、透明材质、动画与设备点击绑定。轻量化命令不包含可视化比较器；美化命令提供 Blender 渲染对比图册，但不自动进行审美评分。所有 CLI 报告默认 `visualReview: pending`。
 
-已实现：分析、accessor 去重、静态减面、PNG/JPEG 缩小、Meshopt、候选择优、输出验证、结构契约、报告。未实现：Blender 自动重拓扑、隐藏面清理、UV 重展、烘焙、KTX2 编码、LOD、自动美术修复。模型实际能优化多少需提供模型后运行。
+轻量化已实现：分析、accessor 去重、静态减面、PNG/JPEG 缩小、Meshopt、候选择优、输出验证、结构契约、报告。美化能力和边界见前面的主流程。模型实际效果需提供模型后执行并审阅。
 
 上游研究和迁移依据见 docs/research.md。本项目是独立实现，未复制上游代码。

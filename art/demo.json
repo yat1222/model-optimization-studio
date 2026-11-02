@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "direction": "示例：蓝色喷漆设备外壳与深灰底座，保留尺寸、层级和设备锚点。仅适用于 beauty:demo 生成的模型。",
+  "geometry": {
+    "bevelRatio": 0.003,
+    "segments": 3,
+    "angle": 40,
+    "weightedNormals": true,
+    "excludeNodes": []
+  },
+  "materials": [
+    {
+      "material": "BodyPaint",
+      "nodes": [
+        "Body"
+      ],
+      "baseColor": [
+        0.12,
+        0.35,
+        0.54
+      ],
+      "metallic": 0.25,
+      "roughness": 0.32
+    },
+    {
+      "material": "Trim",
+      "nodes": [
+        "Base"
+      ],
+      "baseColor": [
+        0.13,
+        0.15,
+        0.18
+      ],
+      "metallic": 0.65,
+      "roughness": 0.38
+    }
+  ],
+  "render": {
+    "resolution": 768,
+    "samples": 32,
+    "exposure": 0,
+    "views": [
+      "front",
+      "back",
+      "left",
+      "right",
+      "top",
+      "bottom",
+      "hero"
+    ]
+  }
+}

@@ -1,10 +1,19 @@
 {
   "name": "model-optimization-studio",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
-  "engines": {"node": ">=22"},
-  "scripts": {"optimize": "node src/cli.js", "test": "node --test", "demo": "node tests/make-demo.js"},
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "optimize": "node src/cli.js",
+    "test": "node --test",
+    "demo": "node tests/make-demo.js",
+    "beautify": "node src/beautify-cli.js",
+    "beauty:demo": "node tests/make-beauty-demo.js",
+    "inspect": "node src/inspect-cli.js"
+  },
   "dependencies": {
     "@gltf-transform/core": "4.5.1",
     "@gltf-transform/extensions": "4.5.1",

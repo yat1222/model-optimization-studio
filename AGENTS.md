@@ -1,4 +1,18 @@
-# Model Optimization Studio：模型优化任务入口
+# Model Optimization Studio：美化优先任务入口
+
+## 用户说“美化/好看/材质/Blender”时
+
+美化是首要目标，压缩只是后处理。先读 `art/ART_BIBLE.md`，按 `.claude/commands/beautify.md` 的基线→美术方案→Blender 执行→同条件截图审阅→最多三轮修正流程推进。Codex 也按此流程工作，不需要 Claude Code 插件。
+
+执行入口：`npm run beautify -- "input/model.glb" --plan "art/<asset>-v1.json"`，运行程序为 Blender 4.5 LTS，可用 `--blender` 或 `BLENDER_BIN` 指定。
+
+必须实际运行 Blender，不能只写提示词；无法启动时说明阻塞。命令不调用 LLM，宿主 AI 负责看图、制定方案和迭代，不能将一键参数处理说成自动审美。默认只处理静态模型；动画/skin/morph 和未验收扩展必须停止，不静默降级。
+
+不改业务节点名、层级、变换与 extras；只在原模型副本上工作。美化可能增面、增加体积。`review.json` 独立记录真实视觉审阅；CLI 成功只代表执行/结构/格式通过。
+
+本节优先于下面的压缩规则。倒角、法线和 PBR 材质修改属于美化授权；UV/烘焙/重拓扑等需技术美术实际扩展并测试，当前没有这些自动算法。
+
+## 用户仅要求轻量化/压缩时
 
 用户提供 glTF/GLB 后，应执行优化并交付真实文件和报告，不要仅给建议。
 
@@ -13,7 +27,7 @@
 
 ## 硬约束
 - 不 flatten/join，不改节点名、父子关系、变换、extras，不合并材质身份；设备节点可能用于点击、定位和数据绑定。
-- 不进行隐藏面删除、自动重拓扑、UV 重展、贴图烘焙、KTX2 转码或 LOD，当前代码没有实现这些能力。
+- optimize 不进行隐藏面删除、自动重拓扑、UV 重展、贴图烘焙、KTX2 转码或 LOD，当前代码没有实现这些能力。
 - 蒙皮/morph 模型整模跳过减面。动画轨道不重采样。
 - 不保证视觉无损、运行时帧率提升或达到固定压缩率。资源 primitives 不是实际 draw calls。
 - meshopt 输出在 Three.js GLTFLoader 中需要 MeshoptDecoder；none 不新增几何压缩，但已有 KTX2/WebP 等扩展仍需要加载器支持。

@@ -1,5 +1,23 @@
 # 验证记录
 
+## v0.2 Blender 美化
+
+2026-11-02，Linux，Node.js v24.22.1，官方 Blender 4.5.3 LTS 二进制。
+
+`BLENDER_BIN=/path/to/blender npm test`：14/14 通过，无跳过（包含原轻量化的 8 项）。
+
+- 美术 JSON 参数范围、未知字段、静态模型前置条件、精确材质/节点匹配验证。
+- 节点名称/层级/变换/extras 契约：容许浮点误差，拒绝缺失锚点或修改 extras。
+- 缺失 Blender、子进程失败、超时、失败报告和不发布未验收 GLB。
+- 真实 Blender 端到端：材质参数实际写入，倒角导致导出三角形增加；GLB Validator 零错误，业务节点契约通过。
+- GLB 重导入后生成 hero 与底视图的前后 PNG，before/after 内容不同；输出 blend 与对比 HTML，GLB 不夹带展示相机。
+
+演示 CLI 另外生成了 768px、32 samples 的多方向前后图、GLB 和打包 blend；实际查看过 hero 图，验证颜色/材质分工与边缘高光的变化。示例是简单静态几何，不代表复杂用户资产的质量保证；该示例没有进行完整美术终审，visualReview 仍为 pending。
+
+没有测试真实用户模型、Windows/macOS 实机或 Three.js 环境匹配；不宣称任意资产自动美化成功。未装 Blender 时该集成测试会明确 skip，而不是伪造成功。
+
+## v0.1 轻量化记录
+
 2026-11-02，Node.js v24.22.1，Linux。
 
 `npm test`：8/8 通过。
