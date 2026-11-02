@@ -1,6 +1,7 @@
 以模型美化为主处理 $ARGUMENTS。
 
 1. 读取 AGENTS.md、art/ART_BIBLE.md、README.md。
+   若使用预设材质，另读 docs/material-maker.md，先 list/inspect 预设，再写入材料方案，实际导出贴图并看图检查，不把模拟测试当成真实生成。
 2. 查验原始模型/资源与 Blender 4.5 LTS。用 `npm run inspect -- "<模型路径>"` 读取节点、材质、贴图和变换；检查尺寸。用户没给参考时采用工业产品方向并记录假设。
 3. 建立 art/<asset>-v1.json 与同名美术说明；必要时先用 industrial.json 输出基线截图，再实际查看 before 图片制定逐部件修改。只有平面贴图/缺失几何时不要承诺能恢复不存在的细节。
 4. 承担 art-director 的方向决策与 blender-artist 的实现工作，按顺序执行；按宿主能力可使用对应角色，但无需为简单任务启动多代理。

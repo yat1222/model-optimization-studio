@@ -5,6 +5,9 @@ import math
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from material_maker import texture_material
+
 import bpy
 import bmesh
 from mathutils import Vector
@@ -108,7 +111,7 @@ def material_pass(objects, rules, changes):
         targets = [o for o in objects if o.type == 'MESH' and ('nodes' not in rule or o.name in rule['nodes']) and source in list(o.data.materials)]
         if not targets:
             raise RuntimeError('Material rule matched no objects: ' + rule['material'])
-        result = source.copy()
+        result = texture_material(source, rule, index, targets, changes) if rule.get('textureSet') else source.copy()
         result.name = f'{source.name}__beauty_{index}'
         result.use_nodes = True
         principled = next((n for n in result.node_tree.nodes if n.type == 'BSDF_PRINCIPLED'), None)

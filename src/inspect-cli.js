@@ -6,7 +6,8 @@ try {
   const root = doc.getRoot();
   console.log(JSON.stringify({stats:stats(doc), nodes:root.listNodes().map(n=>({name:n.getName(),
     parent:n.getParentNode()?.getName()??null, matrix:n.getMatrix(), extras:n.getExtras(),
-    materials:n.getMesh()?.listPrimitives().map(p=>p.getMaterial()?.getName()??null)??[]})),
+    materials:n.getMesh()?.listPrimitives().map(p=>p.getMaterial()?.getName()??null)??[],
+    hasUV0:n.getMesh()?.listPrimitives().every(p=>!!p.getAttribute('TEXCOORD_0'))??false})),
     materials:root.listMaterials().map(m=>({name:m.getName(),baseColorLinear:m.getBaseColorFactor(),
       roughness:m.getRoughnessFactor(),metallic:m.getMetallicFactor(),alphaMode:m.getAlphaMode(),
       textured:!!(m.getBaseColorTexture()||m.getMetallicRoughnessTexture()),normalMap:!!m.getNormalTexture()}))},null,2));

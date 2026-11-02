@@ -1,5 +1,17 @@
 # 验证记录
 
+## v0.3 Material Maker 分支
+
+2026-11-02，Linux，Node.js v24.22.1，Blender 4.5.3 LTS。
+
+- 六个官方 `.ptex` 的 SHA-256 校验、参数覆盖副本隔离、预设 ID/尺寸/UV/替换授权验证。
+- 模拟 Material Maker 进程检查 CLI 参数，覆盖输出缺失、尺寸错误和无法启动等失败；模拟测试不等于 Material Maker 本身运行成功。
+- 真实 Blender 集成：将模拟导出的颜色/法线 PNG、Blender 生成的粗糙度 EXR 应用到模型，生成 UV，GLB 实际携带颜色/法线/金属粗糙度贴图，节点契约与 Validator 通过。
+- 尝试运行官方 Material Maker 1.8 Linux 二进制。当前容器配置 Xvfb 与 Mesa llvmpipe 后，Vulkan 设备初始化可见，但程序在开始导出前崩溃（SIGSEGV）；**未完成真实预设导出或全链路美术验收**。需要在受支持的本机图形环境验证。
+- 默认测试中真实 Material Maker 用例要求 `MATERIAL_MAKER_BIN`，未设置时明确 skip。失败时不会退回模拟材质或声称生成成功。
+
+本分支完整测试共 20 项：19 通过，真实 Material Maker 导出项 1 项跳过。保留之前轻量化与 Blender 美化回归测试。
+
 ## v0.2 Blender 美化
 
 2026-11-02，Linux，Node.js v24.22.1，官方 Blender 4.5.3 LTS 二进制。

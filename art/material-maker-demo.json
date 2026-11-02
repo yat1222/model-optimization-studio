@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "direction": "Material Maker 示例：主体使用木纹，底座保留深色金属。",
+  "geometry": {
+    "bevelRatio": 0.003,
+    "segments": 3,
+    "angle": 40,
+    "weightedNormals": true,
+    "excludeNodes": []
+  },
+  "materials": [
+    {
+      "material": "BodyPaint",
+      "nodes": [
+        "Body"
+      ],
+      "replaceTextures": true,
+      "metallic": 0,
+      "preset": {
+        "id": "wood",
+        "size": 512,
+        "seed": 0,
+        "uv": "generate-if-missing",
+        "uvScale": [
+          1,
+          1
+        ],
+        "normalStrength": 0.4
+      }
+    },
+    {
+      "material": "Trim",
+      "nodes": [
+        "Base"
+      ],
+      "baseColor": [
+        0.13,
+        0.15,
+        0.18
+      ],
+      "metallic": 0.65,
+      "roughness": 0.38
+    }
+  ],
+  "render": {
+    "resolution": 768,
+    "samples": 32,
+    "exposure": 0,
+    "views": [
+      "front",
+      "back",
+      "left",
+      "right",
+      "top",
+      "bottom",
+      "hero"
+    ]
+  }
+}

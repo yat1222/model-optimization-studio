@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "source": {
+    "repository": "https://github.com/RodZill4/material-maker",
+    "ref": "1.8",
+    "commit": "7d6daae3c74c09720afe4138ce09699ab3591ce1",
+    "license": "MIT"
+  },
+  "presets": [
+    {
+      "id": "wood",
+      "file": "wood.ptex",
+      "sha256": "885d2a084df8e54db25e96a951854a01e21bae0b9c510e4576eb92607fd31c9d",
+      "tags": [
+        "wood",
+        "timber",
+        "木材",
+        "木纹"
+      ],
+      "description": "沿纹理方向铺贴；木材默认非金属",
+      "useMetallicMap": false
+    },
+    {
+      "id": "marble",
+      "file": "marble.ptex",
+      "sha256": "82809773150ab18a70ed5c38885be2b501cd65fe30f859cbb3c176c40f2c969f",
+      "tags": [
+        "stone",
+        "marble",
+        "大理石",
+        "石材"
+      ],
+      "description": "石材台面与饰面，注意花纹比例",
+      "useMetallicMap": false
+    },
+    {
+      "id": "bricks",
+      "file": "bricks.ptex",
+      "sha256": "6c5f96379a1803c201c4c1b57eaed5df020bc23af76703824715229f0414a5b0",
+      "tags": [
+        "wall",
+        "bricks",
+        "砖墙",
+        "建筑"
+      ],
+      "description": "建筑墙面，注意真实砖块尺寸",
+      "useMetallicMap": false
+    },
+    {
+      "id": "rock",
+      "file": "rock.ptex",
+      "sha256": "e4844de85b276dbd789e0629179bc5907d393465c02ec36995e94b3afd6710cb",
+      "tags": [
+        "stone",
+        "rock",
+        "岩石",
+        "石头"
+      ],
+      "description": "粗糙岩石表面",
+      "useMetallicMap": false
+    },
+    {
+      "id": "rusted_metal",
+      "file": "rusted_metal.ptex",
+      "sha256": "aae741225c6abfe724c8c870ca2bc76f2816a0af41d2cadc41ffce812392bf63",
+      "tags": [
+        "metal",
+        "rust",
+        "锈蚀",
+        "金属"
+      ],
+      "description": "已氧化金属，不适用于全新设备",
+      "useMetallicMap": true
+    },
+    {
+      "id": "metal_pattern",
+      "file": "metal_pattern.ptex",
+      "sha256": "6f0ec1e591ae82dff9de2da44aa126a78a20fbf11163e16daa4854c802c54380",
+      "tags": [
+        "metal",
+        "pattern",
+        "金属",
+        "防滑"
+      ],
+      "description": "规则花纹金属表面，注意尺度",
+      "useMetallicMap": true
+    }
+  ]
+}

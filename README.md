@@ -1,5 +1,18 @@
 # Model Optimization Studio
 
+## Material Maker 预设材质分支（v0.3）
+
+新增“Codex 选预设与参数 → Material Maker 1.8 生成 PBR 贴图 → Blender 应用到指定部件 → 导出 GLB 并渲染审阅”的流程。包含木纹、大理石、砖墙、岩石、锈蚀金属、花纹金属六种官方示例，支持基础 UV 生成、贴图重复尺度与法线强度控制。
+
+```bash
+npm run materials -- list
+npm run materials -- inspect wood
+npm run beauty:demo
+npm run beautify -- input/beauty-demo.glb --plan art/material-maker-demo.json --material-maker /path/to/material_maker
+```
+
+需要另行安装 Material Maker 1.8 并具备可用图形计算环境，Blender 要求 4.5 LTS。Codex 的自动选材与看图迭代说明、方案格式、许可和限制见 [Material Maker 集成说明](docs/material-maker.md)。CLI 不另行调用 AI API。
+
 面向 Three.js / 数字孪生资产的 **Blender 美化工作室**。v0.2 将美术质量放在首位：参考 Claude-Code-Game-Studios 的美术指导、技术美术与证据验收方法，由 Claude Code / Codex 制定逐模型方案，真实调用 Blender 执行，再看图迭代。保留原来的 Node.js 轻量化工具。
 
 ## 美化模型（主流程）

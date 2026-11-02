@@ -2,6 +2,12 @@
 
 ## 用户说“美化/好看/材质/Blender”时
 
+### Material Maker 预设材质
+
+用户要求用现成程序材质时，先读 `docs/material-maker.md`。执行 `npm run inspect -- <模型>`、`npm run materials -- list` 和 `npm run materials -- inspect <id>`，根据模型与参考选择预设，写入 art-plan 的 `materials[].preset`。实际调用 Material Maker 1.8 导出贴图，再由 Blender 应用、重导入 GLB 并看图迭代。支持 Codex 直接执行，不依赖 Claude Code 专属命令。
+
+从低分辨率预览开始；不得只根据节点名就认定物理材质。替换贴图需在规则中明确 `replaceTextures:true`，保留铭牌、Logo 和功能色。UV 缺失处理、纹理重复尺寸、非金属设置和法线强度必须检查；导出失败不得生成假贴图冒充预设。程序需要图形计算环境，缺少时明确报告，不跳过生成步骤后声称接入成功。
+
 美化是首要目标，压缩只是后处理。先读 `art/ART_BIBLE.md`，按 `.claude/commands/beautify.md` 的基线→美术方案→Blender 执行→同条件截图审阅→最多三轮修正流程推进。Codex 也按此流程工作，不需要 Claude Code 插件。
 
 执行入口：`npm run beautify -- "input/model.glb" --plan "art/<asset>-v1.json"`，运行程序为 Blender 4.5 LTS，可用 `--blender` 或 `BLENDER_BIN` 指定。
@@ -10,7 +16,7 @@
 
 不改业务节点名、层级、变换与 extras；只在原模型副本上工作。美化可能增面、增加体积。`review.json` 独立记录真实视觉审阅；CLI 成功只代表执行/结构/格式通过。
 
-本节优先于下面的压缩规则。倒角、法线和 PBR 材质修改属于美化授权；UV/烘焙/重拓扑等需技术美术实际扩展并测试，当前没有这些自动算法。
+本节优先于下面的压缩规则。倒角、法线和 PBR 材质修改属于美化授权；预设流程可显式补建缺失的基础 UV，复杂 UV 重展、烘焙与重拓扑仍需技术美术实际扩展并测试。
 
 ## 用户仅要求轻量化/压缩时
 

@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { dequantize } from '@gltf-transform/functions';
 import { createIO, loadInput, stats, validate } from './pipeline.js';
+import {validatePresetRequest,preparePlanMaterials} from './material-maker.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const finite = (n, lo, hi) => typeof n === 'number' && Number.isFinite(n) && n >= lo && n <= hi;
@@ -20,7 +21,11 @@ export function validateArtPlan(p) {
   if (!Array.isArray(p.materials)) throw new Error('materials 必须是数组');
   for (const m of p.materials) {
     if (!m || typeof m !== 'object') throw new Error('材质规则必须为对象');
-    keys(m, ['material', 'nodes', 'baseColor', 'metallic', 'roughness', 'replaceTextures']);
+    keys(m, ['material', 'nodes', 'baseColor', 'metallic', 'roughness', 'replaceTextures', 'preset']);
+    if (m.preset !== undefined) {
+      validatePresetRequest(m.preset);
+      if(m.replaceTextures !== true) throw new Error('使用预设须显式设置 replaceTextures:true');
+    }
     if (typeof m.material !== 'string' || !m.material || (m.nodes !== undefined && (!Array.isArray(m.nodes) || !m.nodes.length || !m.nodes.every(n => typeof n === 'string')))) throw new Error('材质规则需要精确 material 名称，nodes 为可选非空节点名数组');
     for (const k of ['roughness', 'metallic']) if (m[k] !== undefined && !finite(m[k], 0, 1)) throw new Error(k + ' 须为 0–1');
     if (m.baseColor !== undefined && (!Array.isArray(m.baseColor) || m.baseColor.length !== 3 || !m.baseColor.every(v => finite(v, 0, 1)))) throw new Error('baseColor 须为三个 0–1 的 sRGB 值');
@@ -52,6 +57,17 @@ export function preflight(doc, plan) {
     for (const name of rule.nodes ?? []) {
       const node = nodes.find(n => n.getName() === name);
       if (!node.getMesh()?.listPrimitives().some(p => p.getMaterial()?.getName() === rule.material)) throw new Error(`节点 ${name} 没有材质 ${rule.material}`);
+    }
+    if (rule.preset) {
+      const material=r.listMaterials().find(m=>m.getName()===rule.material);
+      if(material.getAlphaMode()!=='OPAQUE') throw new Error('Material Maker 预设暂只支持不透明源材质：'+rule.material);
+      for(const node of nodes.filter(n=>!rule.nodes||rule.nodes.includes(n.getName()))) {
+        const primitives=node.getMesh()?.listPrimitives()??[];
+        for(const p of primitives) if(p.getMaterial()===material&&!p.getAttribute('TEXCOORD_0')) {
+          if(rule.preset.uv==='preserve') throw new Error('预设目标缺少 UV：'+node.getName()+'；可显式使用 generate-if-missing');
+          if(primitives.some(p=>p.getAttribute('TEXCOORD_0'))) throw new Error('对象只有部分 primitive 有 UV，须先修复：'+node.getName());
+        }
+      }
     }
   }
   const matched = new Set();
@@ -85,7 +101,7 @@ export async function runBlender(binary, args, logfile, timeoutMs = 30 * 60 * 10
   } finally { await log.close(); }
 }
 
-export async function beautify(input, { plan: planFile = path.join(root, 'art/industrial.json'), out = 'output', blender = process.env.BLENDER_BIN ?? 'blender' } = {}) {
+export async function beautify(input, { plan: planFile = path.join(root, 'art/industrial.json'), out = 'output', blender = process.env.BLENDER_BIN ?? 'blender', materialMaker = process.env.MATERIAL_MAKER_BIN ?? 'material_maker' } = {}) {
   const plan = validateArtPlan(JSON.parse(await fs.readFile(planFile, 'utf8')));
   const io = await createIO(), loaded = await loadInput(path.resolve(input), io);
   preflight(loaded.doc, plan);
@@ -100,7 +116,9 @@ export async function beautify(input, { plan: planFile = path.join(root, 'art/in
   const report = {input: path.basename(input), direction: plan.direction, status: 'running', visualReview: 'pending', before: beforeStats};
   try {
     await fs.writeFile(path.join(dir, 'source.glb'), normalized);
-    await fs.writeFile(path.join(dir, 'art-plan.json'), JSON.stringify(plan, null, 2));
+    await fs.writeFile(path.join(dir, 'requested-art-plan.json'), JSON.stringify(plan, null, 2));
+    const preparedPlan=await preparePlanMaterials(plan,dir,{binary:materialMaker});
+    await fs.writeFile(path.join(dir, 'art-plan.json'), JSON.stringify(preparedPlan, null, 2));
     await runBlender(blender, ['--background', '--factory-startup', '--disable-autoexec', '--python-exit-code', '1', '--python', path.join(root, 'blender/beautify.py'), '--', '--workdir', dir], path.join(dir, 'blender.log'));
     const evidence = JSON.parse(await fs.readFile(path.join(dir, 'blender-report.json'), 'utf8'));
     const bytes = new Uint8Array(await fs.readFile(path.join(dir, 'candidate.glb'))), validation = await validate(bytes);

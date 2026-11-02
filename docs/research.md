@@ -42,3 +42,10 @@
 - https://docs.blender.org/api/4.5/bpy.ops.export_scene.html
 
 实际模型改动与棚拍表现分开记录；GLB 重导入再渲染，避免把只在源场景有效的修改当成最终效果。
+
+## v0.3 Material Maker 预设接入
+
+参考 https://github.com/RodZill4/material-maker ，固定 tag `1.8`、提交 `7d6daae3c74c09720afe4138ce09699ab3591ce1`。
+核对 `parse_args.gd` 的批量导出参数，以及 `addons/material_maker/nodes/material.mmg` 的 Blender 输出通道和文件名；独立实现 Node 调度器与 Blender 贴图连接，不执行上游导出附带脚本。
+
+按上游 MIT 许可引入六个 `material_maker/examples/*.ptex`，保留许可、来源和 SHA-256。Codex 依据预设清单与实际截图决定材料；CLI 是确定性的参数/执行层。真实 Material Maker 在当前容器的 GPU 运行验证未通过，详情见 validation.md，不能把模拟导出集成当成完整引擎验证。
