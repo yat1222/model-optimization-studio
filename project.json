@@ -1,0 +1,8 @@
+{
+  "name": "Model Optimization Studio",
+  "presets": {
+    "safe": { "ratio": 1, "error": 0, "textureSize": null },
+    "balanced": { "ratio": 0.65, "error": 0.001, "textureSize": 2048 },
+    "compact": { "ratio": 0.35, "error": 0.005, "textureSize": 1024 }
+  }
+}
