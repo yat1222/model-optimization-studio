@@ -4,6 +4,14 @@
 
 ## 美化模型（主流程）
 
+主分支已接入 **cc-blender-skill 材质参数参考**：14 项配方，区分可执行基础参数与玻璃/清漆/织物/皮肤等高级参考，不安装额外 MCP。详见 [参数参考说明](docs/material-parameter-reference.md)。
+
+```bash
+npm run material:reference -- list
+npm run material:reference -- show brushed-steel
+npm run material:reference -- rule brushed-steel --material BodyPaint --node Body
+```
+
 需要 Node.js 22+ 与 **Blender 4.5 LTS**，无需安装 Blender 插件或开通额外模型 API。CLI 本身不调用 AI：美术决策、图片审阅与迭代由运行它的 Claude Code / Codex 完成。
 
 ```bash
@@ -127,3 +135,4 @@ report.json 包含前后节点、网格、资源三角形/顶点、primitive、�
 轻量化已实现：分析、accessor 去重、静态减面、PNG/JPEG 缩小、Meshopt、候选择优、输出验证、结构契约、报告。美化能力和边界见前面的主流程。模型实际效果需提供模型后执行并审阅。
 
 上游研究和迁移依据见 docs/research.md。本项目是独立实现，未复制上游代码。
+

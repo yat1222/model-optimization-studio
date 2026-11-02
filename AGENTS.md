@@ -2,6 +2,8 @@
 
 ## 用户说“美化/好看/材质/Blender”时
 
+材质参数先参考 `docs/material-parameter-reference.md` 与 `art/material-parameters.json`（cc-blender-skill 的固定版本配方适配）。用 `npm run material:reference -- list/show/rule` 查询并生成现有 schema 可执行的基础规则。先判断实际表面与涂层，不仅根据节点名猜材质；保留原色与贴图，不能把经验参数当成实测标准。玻璃/Coat/Sheen/SSS/体积吸收目前仅供参考，不写入当前执行器不支持的字段。源配方颜色是线性，项目 baseColor 是 sRGB；按文档转换。
+
 美化是首要目标，压缩只是后处理。先读 `art/ART_BIBLE.md`，按 `.claude/commands/beautify.md` 的基线→美术方案→Blender 执行→同条件截图审阅→最多三轮修正流程推进。Codex 也按此流程工作，不需要 Claude Code 插件。
 
 执行入口：`npm run beautify -- "input/model.glb" --plan "art/<asset>-v1.json"`，运行程序为 Blender 4.5 LTS，可用 `--blender` 或 `BLENDER_BIN` 指定。
@@ -35,3 +37,4 @@
 
 ## 角色参考
 `.claude/agents/` 是 Claude Code 可识别的角色定义，不是常驻服务。Codex 按本文件执行相同流程。角色之间的调度由宿主 AI 决定，CLI 本身是确定性的本地算法管线，不调用 LLM，不要求 API Key。
+

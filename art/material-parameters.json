@@ -1,0 +1,292 @@
+{
+  "version": 1,
+  "kind": "recipe-starting-points-not-measured-standards",
+  "source": {
+    "repository": "https://github.com/RobLe3/cc-blender-skill",
+    "commit": "a2634b588e80265e796aa53f8ab178d75105c2af",
+    "license": "MIT",
+    "path": "plugin/skills/blender-materials/SKILL.md",
+    "overview": "plugin/skills/blender-materials/references/overview.md"
+  },
+  "project": {
+    "blender": "4.5 LTS",
+    "planColorSpace": "sRGB",
+    "upstreamBSDFColorSpace": "linear",
+    "preserveSourceColorByDefault": true
+  },
+  "profiles": [
+    {
+      "id": "brushed-steel",
+      "label": "拉丝钢",
+      "recipe": "Recipe 1",
+      "start": {
+        "metallic": 1,
+        "roughness": 0.25
+      },
+      "requiredFeatures": [],
+      "referenceOnly": {
+        "anisotropy": "可按纹理方向另行设置"
+      },
+      "notes": [
+        "此处只提供金属度/粗糙度起点；不会自动创建拉丝方向或纹理。"
+      ],
+      "adapted": false,
+      "sourceColorLinear": [
+        0.56,
+        0.57,
+        0.58
+      ]
+    },
+    {
+      "id": "mirror-chrome",
+      "label": "镜面铬",
+      "recipe": "Recipe 4",
+      "start": {
+        "metallic": 1,
+        "roughness": 0.02
+      },
+      "requiredFeatures": [],
+      "referenceOnly": {},
+      "notes": [],
+      "adapted": false,
+      "sourceColorLinear": [
+        0.55,
+        0.56,
+        0.55
+      ]
+    },
+    {
+      "id": "polished-gold",
+      "label": "抛光金",
+      "recipe": "Recipe 2",
+      "start": {
+        "metallic": 1,
+        "roughness": 0.05
+      },
+      "requiredFeatures": [],
+      "referenceOnly": {},
+      "notes": [
+        "上游红通道超过 1，默认保留原色；禁止静默截断到 1 或直接作为项目 sRGB。"
+      ],
+      "adapted": false,
+      "sourceColorLinear": [
+        1.022,
+        0.782,
+        0.344
+      ]
+    },
+    {
+      "id": "polished-copper",
+      "label": "抛光铜",
+      "recipe": "Recipe 3",
+      "start": {
+        "metallic": 1,
+        "roughness": 0.05
+      },
+      "requiredFeatures": [],
+      "referenceOnly": {},
+      "notes": [],
+      "adapted": false,
+      "sourceColorLinear": [
+        0.926,
+        0.721,
+        0.504
+      ]
+    },
+    {
+      "id": "matte-plastic",
+      "label": "哑光塑料",
+      "recipe": "Recipe 7",
+      "start": {
+        "metallic": 0,
+        "roughness": 0.6
+      },
+      "requiredFeatures": [],
+      "referenceOnly": {
+        "ior": 1.45
+      },
+      "notes": [],
+      "adapted": false
+    },
+    {
+      "id": "glossy-plastic",
+      "label": "光泽塑料基础层",
+      "recipe": "Decision tree: dielectric glossy finish",
+      "start": {
+        "metallic": 0,
+        "roughness": 0.15
+      },
+      "requiredFeatures": [],
+      "referenceOnly": {
+        "ior": 1.45
+      },
+      "notes": [
+        "仅基础层，不等同于带清漆配方。"
+      ],
+      "adapted": false
+    },
+    {
+      "id": "soft-silicone",
+      "label": "软硅胶",
+      "recipe": "Recipe 11",
+      "start": {
+        "metallic": 0,
+        "roughness": 0.7
+      },
+      "requiredFeatures": [],
+      "referenceOnly": {
+        "ior": 1.4
+      },
+      "notes": [],
+      "adapted": false
+    },
+    {
+      "id": "wood-base",
+      "label": "木材基础层",
+      "recipe": "Recipe 12: scalar adaptation",
+      "start": {
+        "metallic": 0,
+        "roughness": 0.7
+      },
+      "requiredFeatures": [],
+      "referenceOnly": {},
+      "notes": [
+        "仅保留木材非金属与粗糙度起点，不生成木纹。"
+      ],
+      "adapted": true
+    },
+    {
+      "id": "clear-glass",
+      "label": "透明玻璃",
+      "recipe": "Recipe 5",
+      "start": {
+        "metallic": 0,
+        "roughness": 0
+      },
+      "requiredFeatures": [
+        "transmission",
+        "ior"
+      ],
+      "referenceOnly": {
+        "transmission": 1,
+        "ior": 1.5
+      },
+      "notes": [
+        "主分支尚不执行这些透射/折射参数；仅设置 metallic=0 不会形成玻璃。"
+      ],
+      "adapted": false,
+      "sourceColorLinear": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "frosted-glass",
+      "label": "磨砂玻璃",
+      "recipe": "Recipe 6",
+      "start": {
+        "metallic": 0,
+        "roughness": 0.3
+      },
+      "requiredFeatures": [
+        "transmission",
+        "ior"
+      ],
+      "referenceOnly": {
+        "transmission": 1,
+        "ior": 1.5
+      },
+      "notes": [],
+      "adapted": false,
+      "sourceColorLinear": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "lacquered-plastic",
+      "label": "清漆塑料",
+      "recipe": "Recipe 8",
+      "start": {
+        "metallic": 0,
+        "roughness": 0.15
+      },
+      "requiredFeatures": [
+        "coat"
+      ],
+      "referenceOnly": {
+        "ior": 1.45,
+        "coatWeight": 0.8,
+        "coatRoughness": 0.05
+      },
+      "notes": [],
+      "adapted": false
+    },
+    {
+      "id": "velvet",
+      "label": "天鹅绒",
+      "recipe": "Recipe 10",
+      "start": {
+        "metallic": 0,
+        "roughness": 0.9
+      },
+      "requiredFeatures": [
+        "sheen"
+      ],
+      "referenceOnly": {
+        "sheenWeight": 0.5,
+        "sheenRoughness": 0.5
+      },
+      "notes": [],
+      "adapted": false
+    },
+    {
+      "id": "skin-light",
+      "label": "浅色皮肤",
+      "recipe": "Recipe 9",
+      "start": {
+        "metallic": 0,
+        "roughness": 0.4
+      },
+      "requiredFeatures": [
+        "subsurface"
+      ],
+      "referenceOnly": {
+        "subsurfaceWeight": 1,
+        "subsurfaceRadius": [
+          1,
+          0.2,
+          0.1
+        ],
+        "subsurfaceIOR": 1.4
+      },
+      "notes": [
+        "半径与场景尺度有关，不是通用毫米值。"
+      ],
+      "adapted": false
+    },
+    {
+      "id": "colored-glass",
+      "label": "体积着色玻璃",
+      "recipe": "Recipe 6b",
+      "start": {
+        "metallic": 0,
+        "roughness": 0.025
+      },
+      "requiredFeatures": [
+        "transmission",
+        "ior",
+        "volume-absorption"
+      ],
+      "referenceOnly": {
+        "transmission": 1,
+        "ior": 1.52,
+        "volumeAbsorption": "颜色与密度须按真实厚度调整"
+      },
+      "notes": [],
+      "adapted": false
+    }
+  ]
+}

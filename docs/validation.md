@@ -1,5 +1,20 @@
 # 验证记录
 
+## v0.2.1 参数参考集成（main）
+
+2026-11-02，Linux，Node.js v24.22.1，Blender 4.5.3 LTS。
+
+`BLENDER_BIN=/path/to/blender npm test`：19/19 通过，无跳过。
+
+- 固定来源的 14 个 profile、基础参数与高级配方的边界检查。
+- 生成的规则符合现有 art-plan schema，默认保留原颜色与贴图策略。
+- 上游线性颜色到项目 sRGB 再回到线性的回归验证；拒绝金配方越界通道的静默截断。
+- 缺少透射、Coat、Sheen 或 SSS 的配方不能生成误导性的可执行规则。
+- 真实 Blender 4.5.3 LTS：将生成的拉丝钢基础规则应用到示例，导出 GLB，再读回核对 metallic=1、roughness=0.25、线性颜色与源值一致；Validator 与业务节点契约通过。
+- 原有 14 项轻量化/美化测试继续通过。本次不修改 Blender worker，不包含 Material Maker 分支代码。
+
+CLI list/show/rule 已执行。以上是参数/格式/结构验证，不是对真实用户资产的美术终审；visualReview 仍保持 pending。
+
 ## v0.2 Blender 美化
 
 2026-11-02，Linux，Node.js v24.22.1，官方 Blender 4.5.3 LTS 二进制。
@@ -35,3 +50,4 @@ CLI 端到端：`npm run demo` 后 `npm run optimize -- input/demo.glb --preset 
 演示输入 40,536 bytes，输出 10,368 bytes，减少 74.42%；三角形 3,200→1,120；节点 3→3；动画 1→1。
 
 未执行真实用户模型测试、Windows/macOS 实机测试、蒙皮动画专项验收、Three.js 运行时帧率测试或视觉截图验收。演示结果不可推断为所有模型的压缩率。
+

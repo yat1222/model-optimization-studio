@@ -42,3 +42,10 @@
 - https://docs.blender.org/api/4.5/bpy.ops.export_scene.html
 
 实际模型改动与棚拍表现分开记录；GLB 重导入再渲染，避免把只在源场景有效的修改当成最终效果。
+
+## v0.2.1：cc-blender-skill 参数参考
+
+研究并适配 https://github.com/RobLe3/cc-blender-skill ，固定提交 `a2634b588e80265e796aa53f8ab178d75105c2af`。读取材料 skill、overview 与版本兼容性说明。提取 14 项材质配方元数据，添加查询与基础规则生成；保留 MIT 许可，不安装上游技能或 MCP。
+
+根据当前 Blender 4.5 LTS/GLB 执行边界区分基础 metallic/roughness 与仅供参考的透射/Coat/Sheen/SSS/体积参数。明确线性源颜色和 sRGB 计划颜色的转换，不静默截断金配方的越界通道。依据 glTF 官方 BRDF 说明修正上游“中间金属度都不物理”的泛化断言。本次没有合并 Material Maker 分支。
+

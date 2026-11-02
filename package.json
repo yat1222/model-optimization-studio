@@ -1,6 +1,6 @@
 {
   "name": "model-optimization-studio",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -12,7 +12,8 @@
     "demo": "node tests/make-demo.js",
     "beautify": "node src/beautify-cli.js",
     "beauty:demo": "node tests/make-beauty-demo.js",
-    "inspect": "node src/inspect-cli.js"
+    "inspect": "node src/inspect-cli.js",
+    "material:reference": "node src/material-reference-cli.js"
   },
   "dependencies": {
     "@gltf-transform/core": "4.5.1",
